@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Genres from "../../components/Genres/Genres";
 import CustomPagination from "../../components/Pagination/CustomPagination";
 import SingleContent from "../../components/SingleContent/SingleContent";
-import useGenre from "../../components/Genre/UseGenre";
+import useGenre from "../../Genres/useGenre";
 
 const Series = () => {
   const [genres, setGenres] = useState([]);
