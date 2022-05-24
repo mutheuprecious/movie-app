@@ -1,43 +1,43 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Pagination2 from "../../components/Pagination/Pagination";
+import Pagination from "../../components/Pagination/Pagination";
 import LocalSearch from "../../components/Search/LocalSearch";
 import SingleData from "../../components/SingleData/SingleData";
 import Myloader from "react-spinners/PuffLoader";
 import Genre from "../../components/Genres/Genre";
 import useGenre from "../../components/Genres/UseGenre";
 
-const Movies = () => {
+const TvSeries = () => {
   const [treadingContent, setTreadingContent] = useState([]);
   const [page, setPage] = useState(1);
   const [numOfPages, setNumOfPages] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [filterGenre, setFilterGenre] = useState([]);
+  const genreforURL = useGenre(filterGenre);
   const [genreTitle, setGenreTitle] = useState();
   // eslint-disable-next-line
   const [color, setColor] = useState("grey");
-  const genreforURL = useGenre(filterGenre);
 
-  // fetch Movies from TMDB
   const fetchMovieApi = async () => {
     try {
       const { data } = await axios.get(
         ` 
-      https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&language=en-US&sort_by=popularity.desc&with_genres=${genreforURL}
-      `
+        https://api.themoviedb.org/3/discover/tv?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=${genreforURL}
+        `
       );
       setTreadingContent(data.results);
-      setNumOfPages(100);
       setIsLoading(true);
+      setNumOfPages(100);
+
+      // eslint-disable-next-line
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
-
   const fetchSearchApi = async () => {
     if (searchTerm) {
-      const SEARCH_API = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&query=${searchTerm}&page=${page}&sort_by=popularity.desc&page=2`;
+      const SEARCH_API = `https://api.themoviedb.org/3/search/tv?api_key=${process.env.REACT_APP_API_KEY}&query=${searchTerm}&page=${page}&sort_by=popularity.desc`;
       const { data } = await axios.get(SEARCH_API);
       setTreadingContent(data.results);
       setNumOfPages(data.total_pages);
@@ -47,56 +47,52 @@ const Movies = () => {
 
   useEffect(() => {
     window.scroll(0, 0);
+
     if (searchTerm) {
       fetchSearchApi();
     } else {
       fetchMovieApi();
     }
     return () => {
-      setTreadingContent();
+      setTreadingContent(); //clean up
     };
     // eslint-disable-next-line
   }, [page, isLoading, genreforURL]);
 
   return (
     <>
-      <main className="all__movies">
+      <main className="all__series">
         <div className="my__main">
           <div className="TreadingHome">
-            <h3>{genreTitle && genreTitle.name} Movies:</h3>
+            <h3> {genreTitle && genreTitle.name} TV series:</h3>
           </div>
           <LocalSearch
             setSearchTerm={setSearchTerm}
             searchTerm={searchTerm}
             fetchSearchApi={fetchSearchApi}
             numOfpages={numOfPages}
-            setIsLoading={setIsLoading}
-            media="movies"
-            placehold="Search Movies"
-            isLoading={isLoading}
-            treadingContent={treadingContent}
+            media="series"
+            placehold="Search Tv Series"
           />
         </div>
         <div className="sec__main ">
-          <span className="all_genres ">
+          <span className="all__genres ">
             <Genre
-              media="movie"
+              media="tv"
               setFilterGenre={setFilterGenre}
               filterGenre={filterGenre}
               setTreadingContent={setTreadingContent}
               setPage={setPage}
               numOfpages={numOfPages}
               page={page}
-              genreTitle={genreTitle}
               setGenreTitle={setGenreTitle}
-              treadingContent={treadingContent}
             />
           </span>
           <div className="pag  ">
-            {/* <Pagination2
+            {/* <Pagination
               setPage={setPage}
               numOfPages={numOfPages}
-              media="movies"
+              media="series"
               page={page}
               setIsLoading={setIsLoading}
               searchTerm={searchTerm}
@@ -108,15 +104,14 @@ const Movies = () => {
         <div className="ListContent">
           {isLoading && treadingContent ? (
             treadingContent.map((n) => (
-              <SingleData key={n.id} {...n} mediaType="movie" />
+              <SingleData key={n.id} {...n} mediaType="tv" />
             ))
           ) : (
             <div
-              className="loading  "
+              className="loading"
               style={{
                 display: "flex",
                 height: "450px",
-
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -135,17 +130,21 @@ const Movies = () => {
             </div>
           )}
         </div>
-        <Pagination2
-          setPage={setPage}
-          numOfPages={numOfPages}
-          media="movies"
-          searchTerm={searchTerm}
-          setIsLoading={setIsLoading}
-          page={page}
-        />
+
+        {numOfPages > 1 && (
+          <Pagination
+            setPage={setPage}
+            numOfPages={numOfPages}
+            media="series"
+            page={page}
+            searchTerm={searchTerm}
+            setIsLoading={setIsLoading}
+            style={{ marginBottom: "10px" }}
+          />
+        )}
       </main>
     </>
   );
 };
 
-export default Movies;
+export default TvSeries;
