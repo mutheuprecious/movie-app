@@ -1,47 +1,87 @@
 import axios from "axios";
-import "./Trending.css";
 import { useEffect, useState } from "react";
-import SingleContent from "../../components/SingleContent/SingleContent";
-import CustomPagination from "../../components/Pagination/CustomPagination";
+import SingleData from "../../components/SingleData/SingleData";
+import "./TreadingHome.css";
+import "./../PagesStyles.css";
+import Pagination from "../../components/Pagination/Pagination";
+import Myloader from "react-spinners/PuffLoader";
 
-const Trending = () => {
+const Treading = () => {
+  const [treadingContent, setTreadingContent] = useState([]);
   const [page, setPage] = useState(1);
-  const [content, setContent] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line
+  let [color, setColor] = useState("grey");
 
-  const fetchTrending = async () => {
+  const fetchTreadinApi = async () => {
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}&page=${page}`
     );
-
-    setContent(data.results);
+    setTreadingContent(data.results);
+    setIsLoading(true);
+    // eslint-disable-next-line
   };
 
   useEffect(() => {
-    window.scroll(0, 0);
-    fetchTrending();
+    fetchTreadinApi();
     // eslint-disable-next-line
   }, [page]);
 
   return (
-    <div>
-      <span className="pageTitle">Trending Today</span>
-      <div className="trending">
-        {content &&
-          content.map((c) => (
-            <SingleContent
-              key={c.id}
-              id={c.id}
-              poster={c.poster_path}
-              title={c.title || c.name}
-              date={c.first_air_date || c.release_date}
-              media_type={c.media_type}
-              vote_average={c.vote_average}
-            />
-          ))}
-      </div>
-      <CustomPagination setPage={setPage} />
-    </div>
+    <>
+      <main className="all__treads">
+        <div className="my__main2  pt-5">
+          <div
+            style={{ marginTop: "0px", color: "white" }}
+            className="TreadingHome"
+          >
+            <h3> Treading Shows:</h3>
+          </div>
+          <Pagination
+            setPage={setPage}
+            page={page}
+            media="treading"
+            numOfPages="3"
+          />
+        </div>
+
+        <div className="ListContent2">
+          {isLoading && treadingContent ? (
+            treadingContent.map((n) => <SingleData key={n.id} {...n} />)
+          ) : (
+            <div
+              className="loading  "
+              style={{
+                display: "flex",
+                height: "450px",
+
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Myloader color={color} size={60} />
+              <p
+                style={{
+                  color: "grey",
+                  fontSize: "13px",
+                  marginLeft: "10px",
+                  marginTop: "10px",
+                }}
+              >
+                fetching data ...
+              </p>
+            </div>
+          )}
+        </div>
+        <Pagination
+          setPage={setPage}
+          page={page}
+          media="treading"
+          numOfPages="3"
+        />
+      </main>
+    </>
   );
 };
 
-export default Trending;
+export default Treading;
