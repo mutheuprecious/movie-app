@@ -1,29 +1,45 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header/Header";
-import SimpleBottomNavigation from "./components/MainNav";
-import Movies from "./Pages/Movies/Movies";
-import Series from "./Pages/Series/Series";
-import Trending from "./Pages/Trending/Trending";
-import Search from "./Pages/Search/Search";
-import { Container } from "@material-ui/core";
+import Routes from "./config/Routes/Routes";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./../node_modules/touch-loader/touchLoader";
+import React, { useEffect, useState } from "react";
+import Myloader from "react-spinners/ClipLoader";
+import mySvg from "./images/hbo-max.svg";
+import RoutesAuth from "./config/Routes/RoutesAuth";
+import NotFound from "./pages/Errors/NotFound";
 
 function App() {
+  const [spinner, setSpinner] = useState(true);
+
+  // eslint-disable-next-line
+  let [color, setColor] = useState("grey");
+
+  useEffect(() => {
+    setTimeout(() => setSpinner(false), 500);
+  }, []);
   return (
-    <BrowserRouter>
-      <Header />
-      <div className="app">
-        <Container>
+    <>
+      {!spinner ? (
+        <BrowserRouter>
           <Switch>
-            <Route path="/" component={Trending} exact />
-            <Route path="/movies" component={Movies} />
-            <Route path="/series" component={Series} />
-            <Route path="/search" component={Search} />
+            <Route exact path="/error" component={NotFound} />
+            <Route path="/(login)" exact component={RoutesAuth} />
+            <Route path="/" component={Routes} />
           </Switch>
-        </Container>
-      </div>
-      <SimpleBottomNavigation />
-    </BrowserRouter>
+        </BrowserRouter>
+      ) : (
+        <div className="load_app" style={{ height: "400px" }}>
+          <Myloader
+            color={color}
+            size={80}
+            className="m__load"
+            speedMultiplier={1.5}
+          />
+          <img src={mySvg} alt="" width="300" className="logo2 pt-4" />{" "}
+        </div>
+      )}
+    </>
   );
 }
 
