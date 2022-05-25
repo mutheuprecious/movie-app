@@ -1,40 +1,29 @@
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
-import Router from "./Router/Router";
-import { BrowserRouter, Router , Switch } from "react-router-dom";
-import "./../node_modules/touch-loader/touchLoader";
-import React, { useEffect, useState } from "react";
-import Myloader from "react-spinners/ClipLoader";
-import NotFound from "./Pages/Error/NotFound";
+import Header from "./components/Header/Header";
+import SimpleBottomNavigation from "./components/MainNav";
+import Movies from "./Pages/Movies/Movies";
+import Series from "./Pages/Series/Series";
+import Trending from "./Pages/Trending/Trending";
+import Search from "./Pages/Search/Search";
+import { Container } from "@material-ui/core";
 
 function App() {
-  const [spinner, setSpinner] = useState(true);
-
-  // eslint-disable-next-line
-  let [color, setColor] = useState("grey");
-
-  useEffect(() => {
-    setTimeout(() => setSpinner(false), 500);
-  }, []);
   return (
-    <>
-      {!spinner ? (
-        <BrowserRouter>
+    <BrowserRouter>
+      <Header />
+      <div className="app">
+        <Container>
           <Switch>
-            <Router exact path="/error" component={NotFound} />
-            <Router path="/" component={Router} />
+            <Route path="/" component={Trending} exact />
+            <Route path="/movies" component={Movies} />
+            <Route path="/series" component={Series} />
+            <Route path="/search" component={Search} />
           </Switch>
-        </BrowserRouter>
-      ) : (
-        <div className="load_app" style={{ height: "400px" }}>
-          <Myloader
-            color={color}
-            size={80}
-            className="m__load"
-            speedMultiplier={1.5}
-          />
-        </div>
-      )}
-    </>
+        </Container>
+      </div>
+      <SimpleBottomNavigation />
+    </BrowserRouter>
   );
 }
 

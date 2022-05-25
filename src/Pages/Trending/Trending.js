@@ -1,87 +1,47 @@
 import axios from "axios";
+import "./Trending.css";
 import { useEffect, useState } from "react";
-import SingleData from "../../components/SingleData/SingleData";
-import "./TreadingHome.css";
-import "./../PagesStyles.css";
-import Pagination from "../../components/Pagination/Pagination";
-import Myloader from "react-spinners/PuffLoader";
+import SingleContent from "../../components/SingleContent/SingleContent";
+import CustomPagination from "../../components/Pagination/CustomPagination";
 
-const Treading = () => {
-  const [treadingContent, setTreadingContent] = useState([]);
+const Trending = () => {
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line
-  let [color, setColor] = useState("grey");
+  const [content, setContent] = useState([]);
 
-  const fetchTreadinApi = async () => {
+  const fetchTrending = async () => {
     const { data } = await axios.get(
       `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}&page=${page}`
     );
-    setTreadingContent(data.results);
-    setIsLoading(true);
-    // eslint-disable-next-line
+
+    setContent(data.results);
   };
 
   useEffect(() => {
-    fetchTreadinApi();
+    window.scroll(0, 0);
+    fetchTrending();
     // eslint-disable-next-line
   }, [page]);
 
   return (
-    <>
-      <main className="all__treads">
-        <div className="my__main2  pt-5">
-          <div
-            style={{ marginTop: "0px", color: "white" }}
-            className="TreadingHome"
-          >
-            <h3> Treading Shows:</h3>
-          </div>
-          <Pagination
-            setPage={setPage}
-            page={page}
-            media="treading"
-            numOfPages="3"
-          />
-        </div>
-
-        <div className="ListContent2">
-          {isLoading && treadingContent ? (
-            treadingContent.map((n) => <SingleData key={n.id} {...n} />)
-          ) : (
-            <div
-              className="loading  "
-              style={{
-                display: "flex",
-                height: "450px",
-
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Myloader color={color} size={60} />
-              <p
-                style={{
-                  color: "grey",
-                  fontSize: "13px",
-                  marginLeft: "10px",
-                  marginTop: "10px",
-                }}
-              >
-                fetching data ...
-              </p>
-            </div>
-          )}
-        </div>
-        <Pagination
-          setPage={setPage}
-          page={page}
-          media="treading"
-          numOfPages="3"
-        />
-      </main>
-    </>
+    <div>
+      <span className="pageTitle">Trending Today</span>
+      <div className="trending">
+        {content &&
+          content.map((c) => (
+            <SingleContent
+              key={c.id}
+              id={c.id}
+              poster={c.poster_path}
+              title={c.title || c.name}
+              date={c.first_air_date || c.release_date}
+              media_type={c.media_type}
+              vote_average={c.vote_average}
+            />
+          ))}
+      </div>
+      <CustomPagination setPage={setPage} />
+    </div>
   );
 };
 
-export default Treading;
+export default Trending;
