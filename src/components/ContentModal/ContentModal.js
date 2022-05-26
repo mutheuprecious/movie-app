@@ -8,7 +8,7 @@ import {
   img_500,
   unavailable,
   unavailableLandscape,
-} from "../../config/config";
+} from "../../Config";
 import "./ContentModal.css";
 import { Button } from "@material-ui/core";
 import YouTubeIcon from "@material-ui/icons/YouTube";
@@ -57,7 +57,7 @@ export default function TransitionsModal({ children, media_type, id }) {
 
   const fetchVideo = async () => {
     const { data } = await axios.get(
-      `https://api.themoviedb.org/3/${media_type}/${id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`
+      `https://api.themoviedb.org/3/videos?api_key= 692adbc495abd05feeb8e0d517f9aa9c&language=en-US`
     );
 
     setVideo(data.results[0]?.key);

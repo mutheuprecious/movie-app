@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap');
 .header {
     width: 100%;
     cursor: pointer;
@@ -5,12 +6,12 @@
     display: flex;
     justify-content: center;
     text-transform: uppercase;
-    background-color: #39445a;
+    background-color: #1c2351;
     font-family: "Montserrat", sans-serif;
     font-size: 5vw;
     padding-bottom: 15px;
     box-shadow: 0px 1px 5px black;
-    color: white;
+    color: rgb(249, 252, 251);
     z-index: 100;
   }
   

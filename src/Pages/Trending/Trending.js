@@ -10,14 +10,14 @@ const Trending = () => {
 
   const fetchTrending = async () => {
     const { data } = await axios.get(
-      `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.REACT_APP_API_KEY}&page=${page}`
+    `https://api.themoviedb.org/3/trending/all/day?api_key=692adbc495abd05feeb8e0d517f9aa9c`
     );
 
     setContent(data.results);
   };
 
   useEffect(() => {
-    window.scroll(0, 0);
+    window.scroll(0, 10);
     fetchTrending();
     // eslint-disable-next-line
   }, [page]);
